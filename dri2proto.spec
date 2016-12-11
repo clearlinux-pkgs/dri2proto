@@ -4,13 +4,14 @@
 #
 Name     : dri2proto
 Version  : 2.8
-Release  : 6
+Release  : 7
 URL      : http://xorg.freedesktop.org/releases/individual/proto/dri2proto-2.8.tar.bz2
 Source0  : http://xorg.freedesktop.org/releases/individual/proto/dri2proto-2.8.tar.bz2
 Summary  : DRI2 extension headers
 Group    : Development/Tools
 License  : ICU
 Requires: dri2proto-doc
+BuildRequires : pkgconfig(xorg-macros)
 
 %description
 Direct Rendering Infrastructure 2 Extension
@@ -20,6 +21,7 @@ the video hardware without requiring data to be passed through the X server.
 %package dev
 Summary: dev components for the dri2proto package.
 Group: Development
+Provides: dri2proto-devel
 
 %description dev
 dev components for the dri2proto package.
@@ -37,10 +39,15 @@ doc components for the dri2proto package.
 %setup -q -n dri2proto-2.8
 
 %build
+export LANG=C
 %configure --disable-static
-make V=1 %{?_smp_mflags}
+make V=1  %{?_smp_mflags}
 
 %check
+export LANG=C
+export http_proxy=http://127.0.0.1:9/
+export https_proxy=http://127.0.0.1:9/
+export no_proxy=localhost
 make VERBOSE=1 V=1 %{?_smp_mflags} check
 
 %install
@@ -54,7 +61,7 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 /usr/include/X11/extensions/dri2proto.h
 /usr/include/X11/extensions/dri2tokens.h
-/usr/lib64/pkgconfig/*.pc
+/usr/lib64/pkgconfig/dri2proto.pc
 
 %files doc
 %defattr(-,root,root,-)
